@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f0e8">
+<title>FaceFit</title>
+<style>
+:root{--bg:#f7f0e8;--c:#fffdf9;--c2:#f1e8de;--ink:#2b2321;--mu:#8c7f76;--ac:#e8695a;--ac2:#f5a48a;--tl:#27a899;--ln:#eadfd3;--sh:0 1px 2px rgba(80,50,30,.05),0 8px 24px -10px rgba(80,50,30,.18)}
+@media(prefers-color-scheme:dark){:root{--bg:#161211;--c:#211b19;--c2:#2d2522;--ink:#f6ede6;--mu:#a09289;--ac:#f07b6b;--ac2:#f6ad94;--tl:#3cc4b3;--ln:#33292a;--sh:0 8px 24px -12px rgba(0,0,0,.6)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0 auto;background:var(--bg);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif;padding:calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 40px);max-width:520px;min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20% -20% auto auto;width:340px;height:340px;background:radial-gradient(closest-side,color-mix(in srgb,var(--ac2) 45%,transparent),transparent);z-index:-1;pointer-events:none}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+h1{font-size:30px;letter-spacing:-.03em;margin:0;font-weight:800}h1 span{color:var(--ac)}
+#dt{color:var(--mu);font-size:13px;margin-top:2px;text-transform:capitalize}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--c);box-shadow:var(--sh);border-radius:99px;padding:8px 13px;font-size:13px;font-weight:700;white-space:nowrap}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:18px 0 14px}
+.d{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 9px;border-radius:16px;background:var(--c);font-size:11px;color:var(--mu);font-weight:600;box-shadow:var(--sh);transition:.3s}
+.d b{font-size:16px;color:var(--ink);font-weight:800}
+.d i{width:5px;height:5px;border-radius:50%;background:transparent}
+.d.ok i{background:var(--tl)}
+.d.on{background:linear-gradient(160deg,var(--ac2),var(--ac));color:#fff;transform:translateY(-2px)}.d.on b{color:#fff}.d.on.ok i{background:#fff}
+.hero{display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:26px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;margin-bottom:18px;box-shadow:0 14px 30px -14px var(--ac);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-30px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.14)}
+.hr{position:relative;width:72px;height:72px;flex:none}.hr svg{transform:rotate(-90deg)}
+.hr circle{fill:none;stroke-width:7}.hr .t{stroke:rgba(255,255,255,.3)}.hr .p{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.3,1.2,.5,1)}
+.hr em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:20px}
+.hero b{font-size:18px;display:block;letter-spacing:-.01em}.hero small{opacity:.9;font-size:13px;line-height:1.35;display:block;margin-top:3px}
+h2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:0 4px 10px}
+.card{background:var(--c);border-radius:24px;padding:12px;margin-bottom:12px;box-shadow:var(--sh);animation:in .5s both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ex{display:flex;align-items:center;gap:13px;transition:opacity .3s}.ex.done{opacity:.6}
+.th{position:relative;width:92px;height:76px;flex:none;border-radius:17px;overflow:hidden;background:#fcfbf8}
+.th img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block}
+.th s{position:absolute;left:6px;top:6px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--bg);font:800 11px/20px inherit;text-align:center;text-decoration:none}
+.ex.done .th::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--tl) 82%,transparent);color:#fff;font-size:30px;font-weight:800}
+.grow{flex:1;min-width:0}.ex b{display:block;font-size:15.5px;letter-spacing:-.01em;margin-bottom:3px}
+.ex small{color:var(--mu);font-size:12.5px;line-height:1.35;display:block}
+.meta{display:inline-block;margin-top:6px;background:var(--c2);border-radius:99px;padding:3px 9px;font-size:11.5px;font-weight:700;color:var(--ink)}
+button{font:inherit;border:0;cursor:pointer;transition:transform .15s,filter .2s}button:active{transform:scale(.92)}
+.go{width:46px;height:46px;flex:none;border-radius:50%;background:linear-gradient(160deg,var(--ac2),var(--ac));color:#fff;font-size:15px;box-shadow:0 8px 16px -8px var(--ac);padding:0 0 0 3px}
+.go.g{background:var(--c2);color:var(--tl);box-shadow:none;padding:0;font-size:18px;font-weight:800}
+.btn{border-radius:16px;padding:13px 16px;font-weight:800;font-size:15px;background:linear-gradient(160deg,var(--ac2),var(--ac));color:#fff}.btn.g{background:var(--c2);color:var(--ink)}
+#run{padding:16px;background:var(--c);box-shadow:0 20px 40px -18px rgba(80,50,30,.35)}
+#rn{font-weight:800;font-size:20px;letter-spacing:-.02em;margin:2px 4px 12px}
+.vid{background:#fcfbf8;border-radius:20px;overflow:hidden;aspect-ratio:498/380}
+.vid video{width:100%;height:100%;object-fit:contain;display:block}
+.row{display:flex;align-items:center;gap:16px;margin:14px 2px}
+.ring{position:relative;width:100px;height:100px;flex:none}.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}.ring .t{stroke:var(--c2)}#pr{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+#tm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}
+#rt{color:var(--mu);font-size:13.5px;line-height:1.4}#rt b{color:var(--ink)}
+.dots{display:flex;gap:5px;margin-bottom:6px}.dots i{height:6px;flex:1;max-width:30px;border-radius:4px;background:var(--c2)}.dots i.on{background:var(--ac)}
+.btns{display:flex;gap:10px}.btns .btn{flex:1}
+.w{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 6px 2px}
+.w b{font-size:16px;letter-spacing:-.01em}.w small{display:block;color:var(--mu);font-size:13px;margin-top:2px}
+.wb{display:flex;gap:8px}.wb button{height:42px;border-radius:14px}
+#wm{width:42px;background:var(--c2);color:var(--ink);font-size:20px;font-weight:700}
+#wp{padding:0 16px;background:var(--tl);color:#fff;font-weight:800;font-size:14px}
+.glasses{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:14px 6px 8px}
+.glasses i{height:30px;border-radius:5px 5px 9px 9px;background:var(--c2);position:relative;overflow:hidden;transition:.4s}
+.glasses i::after{content:"";position:absolute;inset:auto 0 0 0;height:0;background:linear-gradient(180deg,#7fe0d3,var(--tl));transition:height .5s cubic-bezier(.3,1.3,.5,1)}
+.glasses i.f::after{height:100%}
+.drop{display:inline-block;animation:bob 2s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-3px)}}
+.pop{animation:pop .6s}@keyframes pop{40%{transform:scale(1.03)}}
+.rem{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 6px 4px;padding-top:12px;border-top:1px solid var(--ln);color:var(--mu);font-size:12.5px;line-height:1.35}
+.rem button{flex:none;padding:9px 13px;border-radius:12px;background:var(--c2);color:var(--ink);font-weight:700;font-size:12.5px}
+.note{color:var(--mu);font-size:12px;line-height:1.5;margin:18px 6px 0;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="top"><div><h1>Face<span>Fit</span></h1><div id="dt"></div></div><div class="chip" id="sub"></div></div>
+<div class="days" id="days"></div>
+<div class="hero"><div class="hr"><svg width="72" height="72"><circle class="t" cx="36" cy="36" r="31"/><circle class="p" id="hp" cx="36" cy="36" r="31" stroke-dasharray="194.8" stroke-dashoffset="194.8"/></svg><em id="hn"></em></div><div><b id="ht"></b><small id="hs"></small></div></div>
+<div class="card" id="run" style="display:none"><div id="rn"></div>
+<div class="vid"><video id="rv" muted loop playsinline webkit-playsinline preload="auto"></video></div>
+<div class="row"><div class="ring"><svg width="100" height="100"><circle class="t" cx="50" cy="50" r="45"/><circle id="pr" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="0"/></svg><div id="tm"></div></div><div style="flex:1"><div class="dots" id="dots"></div><div id="rt"></div></div></div>
+<div class="btns"><button class="btn g" onclick="stopT()">Стоп</button><button class="btn" onclick="finish()">Готово ✓</button></div></div>
+<h2>Упражнения на сегодня</h2>
+<div id="list"></div>
+<h2 style="margin-top:20px">Вода</h2>
+<div class="card"><div class="w"><div><b><span class="drop">💧</span> Вода сегодня</b><small id="wt"></small></div><div class="wb"><button id="wm" onclick="subW()" aria-label="Минус стакан">−</button><button id="wp" onclick="addW()">+ стакан</button></div></div><div class="glasses" id="gl"></div>
+<div class="rem"><span>Напоминания каждый час<br>с 8:00 до 23:00</span><button onclick="notif()">Включить</button></div></div>
+<div class="note">Упражнения тонизируют мышцы, но жир локально не сжигают — лицо худеет вместе с общим процентом жира. Сон и вода тоже сильно влияют.</div>
+<script>
+const DN=["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],GOAL=8,MO=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],DF=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+const EX=[
+["Надуй щёки по очереди","Быстро надувай то левую, то правую щёку",25,"puff"],
+["Глаза и щёки","Рот широко «О» — потом зажмурь глаза и сомкни губы",30,"eyes"],
+["Улыбка","Широкая улыбка с закрытым ртом, держи",30,"smile"],
+["Улыбающаяся рыбка","Втяни щёки внутрь, губы «рыбкой»",30,"fish"],
+["Круг языком","Рот закрыт, води языком по кругу за губами",25,"tongue"]];
+const SETS=[1,2,2,3,2,3,2];
+let S=JSON.parse(localStorage.ff||"{}"),T=null,cur=null;
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),today=()=>key(new Date());
+const save=()=>localStorage.ff=JSON.stringify(S);
+function st(){return S[today()]||(S[today()]={done:[],w:0})}
+function render(){
+ const n=new Date(),dw=n.getDay();
+ let streak=0;for(let i=0;i<400;i++){const d=new Date();d.setDate(d.getDate()-i);const s=S[key(d)];if(s&&s.done.length>=EX.length)streak++;else if(i>0)break}
+ dt.textContent=DF[dw]+", "+n.getDate()+" "+MO[n.getMonth()];
+ sub.textContent="🔥 "+streak+" дн.";
+ days.innerHTML=[1,2,3,4,5,6,0].map(i=>{const d=new Date();d.setDate(n.getDate()+(i==0?7:i)-(dw==0?7:dw));const s=S[key(d)];
+  return `<div class="d ${i==dw?'on':''} ${s&&s.done.length>=EX.length?'ok':''}">${DN[i]}<b>${d.getDate()}</b><i></i></div>`}).join("");
+ const s=st(),dn=s.done.length;
+ hn.textContent=dn+"/"+EX.length;hp.style.strokeDashoffset=194.8*(1-dn/EX.length);
+ ht.textContent=dn>=EX.length?"Отлично, всё сделано!":dn?"Так держать!":"Начнём тренировку";
+ hs.textContent="Подходов на упражнение: "+SETS[dw]+(dn>=EX.length?" · серия "+streak+" дн.":"");
+ list.innerHTML=EX.map((e,i)=>{const dd=s.done.includes(i);return `<div class="card ex ${dd?'done':''}" style="animation-delay:${i*70}ms"><div class="th"><img alt="" loading="lazy" src="v/${e[3]}.jpg"><s>${i+1}</s></div><div class="grow"><b>${e[0]}</b><small>${e[1]}</small><span class="meta">${e[2]} с × ${SETS[dw]}</span></div><button class="go ${dd?'g':''}" aria-label="${dd?'Повторить':'Старт'}" onclick="start(${i})">${dd?'✓':'▶'}</button></div>`}).join("");
+ wt.textContent=s.w+" из "+GOAL+" стаканов";
+ gl.innerHTML=Array.from({length:GOAL},(_,k)=>`<i class="${k<s.w?'f':''}"></i>`).join("");
+}
+let WL=null;
+async function wake(){try{WL=await navigator.wakeLock.request("screen")}catch(e){}}
+function start(i){stopT();const n=SETS[new Date().getDay()];cur={i,set:1,n,end:Date.now()+EX[i][2]*1000,left:EX[i][2]};run.style.display="block";
+ rv.poster="v/"+EX[i][3]+".jpg";rv.src="v/"+EX[i][3]+".mp4";rv.currentTime=0;rv.play().catch(()=>{});wake();tick();
+ T=setInterval(()=>{cur.left=Math.ceil((cur.end-Date.now())/1000);
+  if(cur.left<=0){if(cur.set>=cur.n){finish();return}cur.set++;cur.end=Date.now()+EX[i][2]*1000;cur.left=EX[i][2];navigator.vibrate&&navigator.vibrate(200)}
+  tick()},250);run.scrollIntoView({behavior:"smooth",block:"start"})}
+function tick(){const t=EX[cur.i][2];rn.textContent=EX[cur.i][0];rt.innerHTML="Подход <b>"+cur.set+" из "+cur.n+"</b><br>"+EX[cur.i][1];tm.textContent=cur.left;pr.style.strokeDashoffset=282.7*(1-cur.left/t);dots.innerHTML=Array.from({length:cur.n},(_,k)=>`<i class="${k<cur.set?"on":""}"></i>`).join("")}
+function stopT(){clearInterval(T);rv.pause();run.style.display="none";try{WL&&WL.release();WL=null}catch(e){}}
+function finish(){const s=st();if(cur&&!s.done.includes(cur.i))s.done.push(cur.i);save();stopT();navigator.vibrate&&navigator.vibrate([200,100,200]);render()}
+function addW(){st().w++;save();render();const c=gl.closest(".card");c.classList.add("pop");setTimeout(()=>c.classList.remove("pop"),600)}
+function subW(){const s=st();if(s.w>0){s.w--;save();render()}}
+async function notif(){
+ const L=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
+ if(!L){alert("Уведомления работают только в установленном приложении");return}
+ try{const p=await L.requestPermissions();if(p.display!=="granted"){alert("Разреши уведомления в настройках телефона");return}
+ const pend=await L.getPending();if(pend.notifications.length)await L.cancel(pend);
+ const arr=[];for(let h=8;h<=23;h++)arr.push({id:h,title:"💧 Пора попить воды",body:"Стакан воды — и продолжай!",schedule:{on:{hour:h,minute:0},allowWhileIdle:true}});
+ await L.schedule({notifications:arr});localStorage.nf=1;alert("Готово: напоминания каждый час 8:00–23:00")}catch(e){alert("Ошибка: "+e)}
+}
+render();if(!localStorage.nf)setTimeout(notif,800);
+</script></body></html>
